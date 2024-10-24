@@ -25,14 +25,15 @@ namespace PasswordManager
         }
         static List<NamePasswordDto> ReadAllFromFile()                    //метод, который возвращает лист из объектов класса
         {
-            if (!File.Exists(pathFile))                                //проверка, если файла нет
+            using (FileStream file = new FileStream(pathFile, FileMode.OpenOrCreate))
             {
-                var file = File.Create(pathFile);                      //создать файл
-                file.Close();                                          //закрыть файл
+                using (StreamReader sr = new StreamReader(file))
+                {
+                    string json = sr.ReadToEnd();                  //объявление переменной, в которой хранится весь текст из файла
+                    List<NamePasswordDto> namesPasswordsList = JsonConvert.DeserializeObject<List<NamePasswordDto>>(json); //десериализация
+                    return namesPasswordsList ?? new List<NamePasswordDto>(); //возвращаем лист, если нечего возвращать, то возвращаем новый пустой лист
+                }
             }
-            string json = File.ReadAllText(pathFile);                  //объявление переменной, в которой хранится весь текст из файла
-            List<NamePasswordDto> namesPasswordsList = JsonConvert.DeserializeObject<List<NamePasswordDto>>(json); //десериализация
-            return namesPasswordsList ?? new List<NamePasswordDto>(); //возвращаем лист, если нечего возвращать, то возвращаем новый пустой лист
         }
     }
 }
