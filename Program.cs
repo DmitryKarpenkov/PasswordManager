@@ -7,14 +7,15 @@ class Program                           //определение класса
 {
     static void Main(string[] args)     //метод, который является точкой входа в программу
     {
-        Console.WriteLine("Для выхода из программы используйте комманду /exit"); //вывод в консоль подсказки по выходу
+        Console.WriteLine("Для выхода из программы используйте комманду /exit\n" + 
+            "Для сброса пароля используйте команду reset"); //вывод в консоль подсказки по выходу
         CheckCreatedPassword();                                                  //вызов метода
     }
     public static void CheckCreatedPassword()                                       //Создание метода, который ничего не возвращает
     {
         string filePath = "Password.json";                                          //Объявление переменной, которая хранит имя файла
         if (!File.Exists(filePath))                                                 //Проверка, создан ли файл
-        {                                                           
+        {
             using (FileStream file = new FileStream(filePath, FileMode.Create))     //Создания файла с именем из filePath (если файл не создан по условию из if)
             {
                 string password = CreateUserPassword(16);                           //Объявление переменной, которая хранит из себя значение, возвращаемое методом. В методе генерируется пароль
@@ -32,9 +33,13 @@ class Program                           //определение класса
                 string line = JsonSerializer.Deserialize<string>(reader);           //Объявление переменной, которая хранит десериализированную строку из созданного файла
                 Console.WriteLine("Введите пароль:");                               //вывод в консоль указания что нужно делать
                 string userPasswordInput = Console.ReadLine();                      //объявление переменной, которая хранит значение из вводимого в консоль
-                if (userPasswordInput.ToLower() == "/exit")                         //приведение вводимого к нижнему регистру и проверка, равно ли это "/exit"
+                string[] argsUserInput = userPasswordInput.Split();
+                if (userPasswordInput.ToLower() == "/exit" || userPasswordInput.ToLower() == "reset")  //приведение вводимого к нижнему регистру и проверка, равно ли это "/exit"
                 {
-                    Environment.Exit(0);                                            //Если условие true, то приложение закрывается
+                    reader.Close();
+                    CommandFactory commandFactory = new CommandFactory();
+                    ICommand command = commandFactory.GetCommand(userPasswordInput.ToLower());
+                    command.Execute(argsUserInput);                                            //Если условие true, то приложение закрывается
                 }
                 string userPassword = ComputeHash(userPasswordInput, SHA256.Create());  //Объявление переменной, которая хранит из себя значение, возвращаемое методом. В методе передаваемое значение представляется в виде байтов
                 if (userPassword == line)                                               //проверка, равны ли байты вводимого пароля байтам пароля из файла
