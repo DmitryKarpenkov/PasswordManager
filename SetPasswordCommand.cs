@@ -7,7 +7,7 @@
             if (args.Length == 3)
             {
                 NamePasswordDto userNamePasswordDto = new NamePasswordDto(args[1], args[2]);
-                PasswordService.SetPassword(userNamePasswordDto);
+                PasswordService.SetPasswordAsync(userNamePasswordDto);
             }
             else
             {

@@ -2,7 +2,7 @@
 {
     internal class ResetPasswordsFileCommand : ICommand
     {
-        public void Execute(string[] args)
+        public async void Execute(string[] args)
         {
             string[] filesPaths = {"Password.json", "Passwords.json", ".ssh/id_RSA", ".ssh/id_RSA.pub" };
             if (args.Length == 1)
@@ -11,7 +11,7 @@
                 {
                     File.Delete(filesPaths[i]);
                 }
-                Program.CheckCreatedPassword();
+                await Program.CheckCreatedPasswordAsync();
             }
             else
             {

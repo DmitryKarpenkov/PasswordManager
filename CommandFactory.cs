@@ -12,7 +12,7 @@
                 case "set":
                     return new SetPasswordCommand();
 
-                case "exit":
+                case "/exit":
                     return new ExitCommand();
 
                 case "reset":

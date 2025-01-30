@@ -8,7 +8,7 @@ namespace PasswordManager           //объявление области дей
         const string pubKeyFileName = "id_RSA.pub";     //объявление константы, которая хранит название для файла с публичным ключом
         const string privateKeyFileName = "id_RSA";     //объявление константы, которая хранит название для файла с приватным ключом
         const string keysPath = ".ssh/";                //объявление константы, которая хранит название папки с приватным и публичным ключом
-        public static void CreateKeys()                 //метод по созданию файлов и ключей в них
+        public static async Task CreateKeysAsync()                 //метод по созданию файлов и ключей в них
         {
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();  //создание нового экземпляра класса RSACryptoServiceProvider для генерации приватного и публичного ключей
             var publicKey = rsa.ToXmlString(false);                         //объявление переменной, которая хранит публичный ключ. false - публичный                            
@@ -17,8 +17,8 @@ namespace PasswordManager           //объявление области дей
             {
                 Directory.CreateDirectory(keysPath);                        //создание папки, чтобы путь .ssh/ был актуальным
             }
-            File.WriteAllText($"{keysPath}{pubKeyFileName}", publicKey, Encoding.Default);          //Создание файла с публичным ключем
-            File.WriteAllText($"{keysPath}{privateKeyFileName}", privateKey, Encoding.Default);     //Создание файла с приватным ключем
+            await File.WriteAllTextAsync($"{keysPath}{pubKeyFileName}", publicKey, Encoding.Default);          //Создание файла с публичным ключем
+            await File.WriteAllTextAsync($"{keysPath}{privateKeyFileName}", privateKey, Encoding.Default);     //Создание файла с приватным ключем
         }
     }
 }

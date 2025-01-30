@@ -2,11 +2,12 @@
 {
     internal class GetPasswordCommand : ICommand
     {
-        public void Execute(string[] args)
+        public async void Execute(string[] args)
         {
             if (args.Length == 2)
             {
-                PasswordService.GetPassword(args[1]);
+                Task getPasswordTask = PasswordService.GetPasswordAsync(args[1]);
+                await getPasswordTask;
             }
             else
             {
